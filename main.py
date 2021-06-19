@@ -87,8 +87,45 @@ def generate_board():
     return board
 
     
+def nearby_same_color(color_number, up_color, down_color, left_color, right_color):
+    if color_number == up_color or color_number == down_color or color_number == left_color or color_number == right_color:
+        return True 
+    return False
+
+
 def get_valid_moves(board):
-    return [[1,4],[2,2]]
+    valid_moves = []
+    column = 0
+    for rows in board:
+        row = 0
+        for color_number in rows:
+
+            up_color = 0
+            if(row > 0):
+                up_color = board[column][row - 1]
+
+            down_color = 0
+            if(row < 8):
+                down_color = board[column][row + 1]
+            
+            left_color = 0
+            if(column > 0):
+                left_color = board[column - 1][row]
+
+            right_color = 0
+            if(column < 14):
+                right_color = board[column + 1][row]
+                
+            if nearby_same_color(color_number, up_color, down_color, left_color, right_color):
+
+                valid_moves.append([column, row])
+            
+
+            row = row + 1
+            
+        column = column + 1
+        
+    return valid_moves
 
 def main():
 
@@ -109,14 +146,17 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 
                 valid_moves = get_valid_moves(board)
-                print(valid_moves)
-
-                print('mouse press')
+                
+                
+                #print('mouse press')
                 x, y = pygame.mouse.get_pos()
                 column = math.floor(x/50)
                 row = math.floor(y/50)
-                print(board[row][column])
-                board[row][column]=0
+                
+                if [row, column] in valid_moves:
+                    board[row][column] = 0
+                    print('I will allow it')
+
 
         if score > 1000:
             draw_winner('You lost')
