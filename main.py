@@ -190,6 +190,47 @@ def add_score(number_of_clears):
         return 110        # THIS IS FAKED
 
 
+def are_there_colors_above(colors, row, column, board):
+    if(row == 0):
+        return colors
+
+    if (board[row][column] == 0):
+        return colors
+    
+    if (board[row][column] != 0):
+        colors.append([row, column])
+        colors = are_there_colors_above(colors, row-1, column, board)
+    return colors
+    
+    
+
+def execute_gravity(board):
+
+    row = 0
+    for rows in board:
+        column = 0
+        for block in rows:
+       
+            if(block == 0):
+                column = column + 1
+                continue
+
+            if(row > 13):
+                break            
+
+            # Can block move down?
+            if(board[row + 1][column] == 0):
+                board[row + 1][column] = board[row][column]
+                board[row][column] = 0
+                # Run it again
+                execute_gravity(board)
+            
+            column = column + 1    
+
+        row = row + 1   
+
+    return board
+
 def main():
 
     score = 0
@@ -220,6 +261,7 @@ def main():
                 if ([row, column] in valid_moves and board[row][column] != 0):
                     board, number_of_clears = clear_all_nearby(board[row][column], row, column, board, 0)
                     score = score + add_score(number_of_clears)
+                    board = execute_gravity(board)
                 
 
 
