@@ -133,28 +133,61 @@ def get_valid_moves(board):
     return valid_moves
 
 
-def clear_all_nearby(deleting_color, row, column, board):
+def clear_all_nearby(deleting_color, row, column, board, number_of_clears):
 
     if(row == -1):
-        return board
+        return board, number_of_clears
 
     if(row == 15):
-        return board
+        return board, number_of_clears
 
     if(column == -1):
-        return board
+        return board, number_of_clears
 
     if(column == 9):
-        return board
+        return board, number_of_clears
 
 
     if deleting_color == board[row][column]:
         board[row][column] = 0
-        board = clear_all_nearby(deleting_color, row+1, column, board)
-        board = clear_all_nearby(deleting_color, row-1, column, board)
-        board = clear_all_nearby(deleting_color, row, column-1, board)
-        board = clear_all_nearby(deleting_color, row, column+1, board)
-    return board
+        number_of_clears = number_of_clears + 1
+        board, number_of_clears = clear_all_nearby(deleting_color, row+1, column, board, number_of_clears)
+        board, number_of_clears = clear_all_nearby(deleting_color, row-1, column, board, number_of_clears)
+        board, number_of_clears = clear_all_nearby(deleting_color, row, column-1, board, number_of_clears)
+        board, number_of_clears = clear_all_nearby(deleting_color, row, column+1, board, number_of_clears)
+    return board, number_of_clears
+
+def add_score(number_of_clears):
+    if(number_of_clears==2):
+        return 2
+    elif(number_of_clears==3):
+        return 5
+    elif(number_of_clears==4):
+        return 8
+    elif(number_of_clears==5):
+        return 13
+    elif(number_of_clears==6):
+        return 18   
+    elif(number_of_clears==7):
+        return 25
+    elif(number_of_clears==8):
+        return 32
+    elif(number_of_clears==9):
+        return 41
+    elif(number_of_clears==10):
+        return 50        # THIS IS FAKED
+    elif(number_of_clears==11):
+        return 61
+    elif(number_of_clears==12):
+        return 70        # THIS IS FAKED
+    elif(number_of_clears==13):
+        return 85
+    elif(number_of_clears==14):
+        return 90        # THIS IS FAKED
+    elif(number_of_clears==15):
+        return 100        # THIS IS FAKED
+    elif(number_of_clears==16):
+        return 110        # THIS IS FAKED
 
 
 def main():
@@ -185,7 +218,8 @@ def main():
                 row = math.floor(y/50)
                 print(row,column, board[row][column])
                 if ([row, column] in valid_moves and board[row][column] != 0):
-                    board = clear_all_nearby(board[row][column], row, column, board)
+                    board, number_of_clears = clear_all_nearby(board[row][column], row, column, board, 0)
+                    score = score + add_score(number_of_clears)
                 
 
 
