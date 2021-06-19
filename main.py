@@ -15,61 +15,68 @@ YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-BORDER = pygame.Rect(WIDTH//2 - 5, 0, 10, HEIGHT)
+BORDER = pygame.Rect(0, 0, WIDTH, HEIGHT)
 
-
-HEALTH_FONT = pygame.font.SysFont('comicsans', 40)
-WINNER_FONT = pygame.font.SysFont('comicsans', 100)
+STANDARD_FONT = pygame.font.SysFont('comicsans', 40)
 
 FPS = 60
-VEL = 5
-BULLET_VEL = 7
-MAX_BULLETS = 3
-SPACESHIP_WIDTH, SPACESHIP_HEIGHT = 55, 40
+
 
 YELLOW_HIT = pygame.USEREVENT + 1
 RED_HIT = pygame.USEREVENT + 2
 
 
-def draw_window(red, yellow, red_bullets, yellow_bullets, score):
-    
+def draw_window(board, score):
 
+    # clear screen    
     pygame.draw.rect(WIN, BLACK, BORDER)
 
-    score_text = HEALTH_FONT.render("Score: " + str(score), 1, WHITE)
+    # Draw score
+    score_text = STANDARD_FONT.render("Score: " + str(score), 1, WHITE)
     WIN.blit(score_text, (10, 760))
     
+    # Draw game board with cubes
 
-
-    for bullet in red_bullets:
-        pygame.draw.rect(WIN, RED, bullet)
-
-    for bullet in yellow_bullets:
-        pygame.draw.rect(WIN, YELLOW, bullet)
-
-    bajs = pygame.Rect(0, 0, 50, 50)
-
-    pygame.draw.rect(WIN, YELLOW, bajs)
+    draw_board(board)
 
     pygame.display.update()
 
 
+def draw_board(board):
+    game_block = pygame.Rect(0, 0, 50, 50)
+    pygame.draw.rect(WIN, YELLOW, game_block)
+
+    temp_height = 0
+    temp_width = 0
+    for row in board:
+        temp_width = 0
+        for block in row:
+
+            print(block)
+
+            game_block = pygame.Rect(temp_width, temp_height, 50, 50)
+            pygame.draw.rect(WIN, YELLOW, game_block)
+
+            temp_width = temp_width + 50
+        temp_height = temp_height + 50
+        #pygame.draw.rect(WIN, YELLOW, bullet)
+
 def draw_winner(text):
-    draw_text = WINNER_FONT.render(text, 1, WHITE)
+    draw_text = STANDARD_FONT.render(text, 1, WHITE)
     WIN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT/2 - draw_text.get_height()/2))
     pygame.display.update()
     pygame.time.delay(5000)
 
 
 def main():
-    red = pygame.Rect(700, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
-    yellow = pygame.Rect(100, 300, SPACESHIP_WIDTH, SPACESHIP_HEIGHT)
-
-    red_bullets = []
-    yellow_bullets = []
 
     score = 0
     
+    board = [
+        [0,1,2,3,4,1,4,2,0],
+        [0,1,2,3,4,1,4,2,0]
+    ]
+
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -93,7 +100,11 @@ def main():
 
         keys_pressed = pygame.key.get_pressed()
 
-        draw_window(red, yellow, red_bullets, yellow_bullets, score)
+        if keys_pressed[pygame.K_a]:
+            score = score + 10
+            print('A is pressed')
+
+        draw_window(board, score)
 
     main()
 
