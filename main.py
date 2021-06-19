@@ -188,7 +188,8 @@ def add_score(number_of_clears):
         return 100        # THIS IS FAKED
     elif(number_of_clears==16):
         return 110        # THIS IS FAKED
-
+    else:
+        return 999999     # THIS IS FAKED
 
 def are_there_colors_above(colors, row, column, board):
     if(row == 0):
@@ -201,8 +202,79 @@ def are_there_colors_above(colors, row, column, board):
         colors.append([row, column])
         colors = are_there_colors_above(colors, row-1, column, board)
     return colors
-    
-    
+
+def fill_board(board):
+
+    row = 0
+    for rows in board:
+        column = 0
+        for block in rows:
+            if board[14][column] == 0:
+                break
+
+            if(block == 0):
+                board[row][column] = random.randint(1, 4)
+
+            column = column + 1
+        row = row + 1
+    return board
+
+def execute_column_break(board, active_columns):
+
+    should_board_be_filled = False
+    for column in range(active_columns):
+        if(board[0][column]==0 and 
+        board[1][column]==0 and 
+        board[2][column]==0 and 
+        board[3][column]==0 and 
+        board[4][column]==0 and 
+        board[5][column]==0 and 
+        board[6][column]==0 and 
+        board[7][column]==0 and 
+        board[8][column]==0 and 
+        board[9][column]==0 and 
+        board[10][column]==0 and 
+        board[11][column]==0 and 
+        board[12][column]==0 and 
+        board[13][column]==0 and 
+        board[14][column]==0):
+            board[0].append(0)
+            board[1].append(0)
+            board[2].append(0)
+            board[3].append(0)
+            board[4].append(0)
+            board[5].append(0)
+            board[6].append(0)
+            board[7].append(0)
+            board[8].append(0)
+            board[9].append(0)
+            board[10].append(0)
+            board[11].append(0)
+            board[12].append(0)
+            board[13].append(0)
+            board[14].append(0)        
+            del board[0][column]
+            del board[1][column]
+            del board[2][column]
+            del board[3][column]
+            del board[4][column]
+            del board[5][column]
+            del board[6][column]
+            del board[7][column]
+            del board[8][column]
+            del board[9][column]
+            del board[10][column]
+            del board[11][column]
+            del board[12][column]
+            del board[13][column]
+            del board[14][column]
+            active_columns = active_columns -1
+            should_board_be_filled = True
+
+    if (should_board_be_filled):
+        board = fill_board(board)
+
+    return board, active_columns
 
 def execute_gravity(board):
 
@@ -236,7 +308,7 @@ def main():
     score = 0
     
     board = generate_board()
-
+    active_columns = 9
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -262,6 +334,7 @@ def main():
                     board, number_of_clears = clear_all_nearby(board[row][column], row, column, board, 0)
                     score = score + add_score(number_of_clears)
                     board = execute_gravity(board)
+                    board, active_columns = execute_column_break(board, active_columns)
                 
 
 
