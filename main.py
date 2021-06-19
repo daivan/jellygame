@@ -132,13 +132,13 @@ def clear_all_nearby(deleting_color, row, column, board):
     if(row == -1):
         return board
 
-    if(row == 9):
+    if(row == 15):
         return board
 
     if(column == -1):
         return board
 
-    if(column == 16):
+    if(column == 9):
         return board
 
 
