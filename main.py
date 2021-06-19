@@ -1,5 +1,7 @@
 import pygame
-import os
+import random
+import math
+
 pygame.font.init()
 pygame.mixer.init()
 
@@ -20,10 +22,6 @@ BORDER = pygame.Rect(0, 0, WIDTH, HEIGHT)
 STANDARD_FONT = pygame.font.SysFont('comicsans', 40)
 
 FPS = 60
-
-
-YELLOW_HIT = pygame.USEREVENT + 1
-RED_HIT = pygame.USEREVENT + 2
 
 
 def draw_window(board, score):
@@ -52,8 +50,6 @@ def draw_board(board):
         temp_width = 0
         for block in row:
 
-            print(block)
-
             game_block = pygame.Rect(temp_width, temp_height, 50, 50)
             
             if (block == 1):
@@ -79,44 +75,41 @@ def draw_winner(text):
     pygame.time.delay(5000)
 
 
+def generate_board():
+
+    board = []
+    for x in range(15):
+        row = []
+        for y in range(9):
+            row.append(random.randint(1, 4))
+        board.append(row)
+
+    return board
+
+    
 def main():
 
     score = 0
     
-    board = [
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0],
-        [0,1,2,3,4,1,4,2,0]
-    ]
+    board = generate_board()
 
     clock = pygame.time.Clock()
     run = True
     while run:
         clock.tick(FPS)
+    
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
 
-            if event.type == RED_HIT:
-                red_health -= 1
-                #BULLET_HIT_SOUND.play()
-
-            if event.type == YELLOW_HIT:
-                yellow_health -= 1
-                #BULLET_HIT_SOUND.play()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                print('mouse press')
+                x, y = pygame.mouse.get_pos()
+                column = math.floor(x/50)
+                row = math.floor(y/50)
+                print(board[row][column])
+                board[row][column]=0
 
         if score > 1000:
             draw_winner('You lost')
