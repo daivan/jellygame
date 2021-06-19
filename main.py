@@ -127,6 +127,35 @@ def get_valid_moves(board):
         
     return valid_moves
 
+def clear_all_nearby(deleting_color, row, column, board):
+
+    if(row == -1):
+        return board
+
+    if(row == 9):
+        return board
+
+    if(column == -1):
+        return board
+
+    if(column == 16):
+        return board
+
+
+    if deleting_color == board[row][column]:
+        board[row][column] = 0
+        board = clear_all_nearby(deleting_color, row+1, column, board)
+        board = clear_all_nearby(deleting_color, row-1, column, board)
+        board = clear_all_nearby(deleting_color, row, column-1, board)
+        board = clear_all_nearby(deleting_color, row, column+1, board)
+    return board
+    #board[column][row] = 0
+
+    #if(row > 0):
+    #    up_color = board[column][row - 1]
+
+    #board[row][column] = 0
+
 def main():
 
     score = 0
@@ -148,14 +177,12 @@ def main():
                 valid_moves = get_valid_moves(board)
                 
                 
-                #print('mouse press')
                 x, y = pygame.mouse.get_pos()
                 column = math.floor(x/50)
                 row = math.floor(y/50)
                 
                 if [row, column] in valid_moves:
-                    board[row][column] = 0
-                    print('I will allow it')
+                    board = clear_all_nearby(board[row][column], row, column, board)
 
 
         if score > 1000:
