@@ -55,7 +55,18 @@ def draw_board(board):
             print(block)
 
             game_block = pygame.Rect(temp_width, temp_height, 50, 50)
-            pygame.draw.rect(WIN, YELLOW, game_block)
+            
+            if (block == 1):
+                color = YELLOW
+            elif (block == 2):
+                color = BLUE
+            elif (block == 3):
+                color = RED
+            elif (block == 4):
+                color = GREEN
+            else:
+                color = BLACK
+            pygame.draw.rect(WIN, color, game_block)
 
             temp_width = temp_width + 50
         temp_height = temp_height + 50
