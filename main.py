@@ -87,6 +87,9 @@ def generate_board():
     return board
 
     
+def get_valid_moves(board):
+    return [[1,4],[2,2]]
+
 def main():
 
     score = 0
@@ -104,6 +107,10 @@ def main():
                 pygame.quit()
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                
+                valid_moves = get_valid_moves(board)
+                print(valid_moves)
+
                 print('mouse press')
                 x, y = pygame.mouse.get_pos()
                 column = math.floor(x/50)
