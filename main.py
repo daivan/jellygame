@@ -176,6 +176,7 @@ def main():
                 
                 valid_moves = get_valid_moves(board)
                 
+                print(valid_moves.count())
                 
                 x, y = pygame.mouse.get_pos()
                 column = math.floor(x/50)
