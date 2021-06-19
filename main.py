@@ -68,7 +68,7 @@ def draw_board(board):
         temp_height = temp_height + 50
         #pygame.draw.rect(WIN, YELLOW, bullet)
 
-def draw_winner(text):
+def end_game(text):
     draw_text = STANDARD_FONT.render(text, 1, WHITE)
     WIN.blit(draw_text, (WIDTH/2 - draw_text.get_width() / 2, HEIGHT/2 - draw_text.get_height()/2))
     pygame.display.update()
@@ -95,37 +95,43 @@ def nearby_same_color(color_number, up_color, down_color, left_color, right_colo
 
 def get_valid_moves(board):
     valid_moves = []
-    column = 0
+  
+    row = 0
+
     for rows in board:
-        row = 0
-        for color_number in rows:
+        column = 0
+        for block in rows:
+       
+            if(block == 0):
+                column = column + 1  
+                continue
 
             up_color = 0
             if(row > 0):
-                up_color = board[column][row - 1]
+                up_color = board[row - 1][column]
 
             down_color = 0
-            if(row < 8):
-                down_color = board[column][row + 1]
+            if(row < 14):
+                down_color = board[row + 1][column]
             
             left_color = 0
             if(column > 0):
-                left_color = board[column - 1][row]
+                left_color = board[row][column-1]
 
             right_color = 0
-            if(column < 14):
-                right_color = board[column + 1][row]
+            if(column < 8):
+                right_color = board[row][column+1]
                 
-            if nearby_same_color(color_number, up_color, down_color, left_color, right_color):
-
-                valid_moves.append([column, row])
+            if nearby_same_color(block, up_color, down_color, left_color, right_color):
+                
+                valid_moves.append([row, column])
             
+            column = column + 1    
 
-            row = row + 1
-            
-        column = column + 1
-        
+        row = row + 1   
+
     return valid_moves
+
 
 def clear_all_nearby(deleting_color, row, column, board):
 
@@ -149,12 +155,7 @@ def clear_all_nearby(deleting_color, row, column, board):
         board = clear_all_nearby(deleting_color, row, column-1, board)
         board = clear_all_nearby(deleting_color, row, column+1, board)
     return board
-    #board[column][row] = 0
 
-    #if(row > 0):
-    #    up_color = board[column][row - 1]
-
-    #board[row][column] = 0
 
 def main():
 
@@ -167,6 +168,8 @@ def main():
     while run:
         clock.tick(FPS)
     
+        valid_moves = get_valid_moves(board)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -174,23 +177,31 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 
-                valid_moves = get_valid_moves(board)
                 
-                print(valid_moves.count())
+                print(len(valid_moves))
                 
                 x, y = pygame.mouse.get_pos()
                 column = math.floor(x/50)
                 row = math.floor(y/50)
-                
-                if [row, column] in valid_moves:
+                print(row,column, board[row][column])
+                if ([row, column] in valid_moves and board[row][column] != 0):
                     board = clear_all_nearby(board[row][column], row, column, board)
+                
 
 
-        if score > 1000:
-            draw_winner('You lost')
+        if len(valid_moves) == 0:
+            end_game('You lost')
             break
 
         keys_pressed = pygame.key.get_pressed()
+
+        if keys_pressed[pygame.K_b]:
+            print("\n\r")
+            for row in board:
+                print(row)
+
+        if keys_pressed[pygame.K_c]:
+            print(valid_moves)
 
         if keys_pressed[pygame.K_a]:
             score = score + 10
